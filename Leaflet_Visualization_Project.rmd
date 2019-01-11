@@ -1,0 +1,51 @@
+---
+title: "Leaflet_Visualization"
+author: "Dhaval Mandalia"
+date: "January 11, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## World Heritage Site Map - Ahmedabad, Gujarat, India
+
+This map contains the top 3 sites identified has World Heritage Sites in Ahmedabad, and shows population in 5 major cities around Ahmedabad.
+```{r ,fig.align='center'}
+library(leaflet)
+mapIcons <- makeIcon(
+  iconUrl = "https://seeklogo.com/images/G/gujarat-tourism-logo-FAAFFB32AE-seeklogo.com.png",
+  iconWidth = 31*215/230,iconHeight = 31,
+  iconAnchorX = 31*215/230/2,iconAnchorY = 16
+  )
+mapCities<-data.frame(name=c("Baroda","Surat","Rajkot","Bhavnagar","Mehsana"),
+                      pop = c(2270000,4460000,3800000,1500000,884000),
+                      lat=c(22.3072, 21.1702, 22.3039,21.7645,23.5880),
+                      lng = c(73.1812, 72.8311, 70.8022,72.1519,72.3693),
+                      col = c("blue","red","orange","brown","yellow")
+                      )
+
+mapSites <- c(
+  "<a href = 'https://gandhiashramsabarmati.org/'>Gandhi Ashram</a>",
+  "<a href = 'http://www.asmwc.org/'>Jama Masjid</a>",
+  "<a href = 'https://www.gujarattourism.com/destination/details/6/32'>Adalaj Stepwell</a>"
+)
+
+mapLatLong <- data.frame(
+  lat=c(23.060635,23.023775,23.166648),
+  lng=c(72.580797,72.587065,72.580046)
+)
+
+mapLatLong %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(icon=mapIcons,popup = mapSites,clusterOptions = markerClusterOptions()) %>%
+  addCircleMarkers(mapCities,color=mapCities$col,lat = mapCities$lat,lng = mapCities$lng,weight = 10,radius = sqrt(mapCities$pop/10000)*3) %>%
+  addLegend(labels = mapCities$name,colors = c("blue","red","orange","brown","yellow"))
+
+```
+
+
+

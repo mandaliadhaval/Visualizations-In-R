@@ -1,0 +1,90 @@
+---
+title: "Plotly_Visualization"
+author: "Dhaval Mandalia"
+date: "January 10, 2019"
+output: slidy_presentation
+#html_document
+#ioslides_presentation
+---
+
+## R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(rgl.printRglwidget = TRUE)
+```
+
+## First Plotly Visualization
+Simple cars dataframe used to scatter plot weight vs miles per gallon data.
+
+```{r FirstStep, echo=FALSE, message=FALSE}
+library(plotly)
+plot_ly(mtcars,x=~wt,y=~mpg,mode="markers")
+```
+
+## Second Step to utilize other Plotly options
+
+```{r SecondStep, echo=FALSE, message=FALSE, warning=FALSE}
+#plot_ly(mtcars,x=~wt,y=~mpg,mode="markers",color = ~as.factor(cyl))
+#plot_ly(mtcars,x=~wt,y=~mpg,mode="markers",color = ~disp)
+plot_ly(mtcars,x=~wt,y=~mpg,mode="markers",color = ~as.factor(cyl),size=~hp*100)
+
+```
+
+## Third step to create 3D Scatter Plot
+
+```{r ThirdStep, echo=FALSE, message=FALSE, warning=FALSE}
+set.seed(101)
+plot_ly(mtcars,x=~wt,y=~mpg, z=~carb,type="scatter3d",mode="markers",color = ~as.factor(cyl))
+
+```
+
+## Fourth Step on Line Charts
+
+```{r FourthStep, echo=FALSE, warning=FALSE}
+library(dplyr);library(tidyr)
+data("EuStockMarkets")
+
+stocks <- as.data.frame(EuStockMarkets) %>%
+  gather(index,price) %>%
+  mutate(time = rep(time(EuStockMarkets),4))
+
+plot_ly(stocks,x=~time,y=~price,color = ~index)
+
+```
+
+
+## Fifth Step to look at other types of charts
+
+```{r FifthStep, echo=FALSE, warning=FALSE}
+precip <- rnorm(100)
+print("Sample Histogram:")
+plot_ly(x=precip,type="histogram")
+print("Sample Boxplot:")
+plot_ly(iris,y=~Petal.Length,color=~Species,type="box")
+print("Sample Heatmap:")
+terrain <-matrix(rnorm(100*100),nrow=100,ncol=100)
+plot_ly(z=terrain,type="heatmap")
+print("Sample Surface:")
+terrain1 <-matrix(sort(rnorm(100*100)),nrow=100,ncol=100)
+plot_ly(z=terrain1,type="surface")
+```
+
+
+## Sixth Step to look at other types of charts
+
+```{r SixthStep, echo=FALSE, warning=FALSE}
+##Choropleth Maps
+state_pop <- data.frame(State = state.abb,Pop=as.vector(state.x77[,1]))
+state_pop$hover <- with(state_pop,paste(State,'<br>',"Population:",Pop))
+borders <- list(color = toRGB("red"))
+map_options <- list(scope='usa',projection=list(type = 'albers usa'), showlakes = TRUE,lakecolr = toRGB('white'))
+
+plot_ly(state_pop,z=~Pop,text=~hover,locations=~State ,type='choropleth',locationmode='USA-states',color=~Pop,colors='Blues',marker=list(line=borders)) %>%
+  layout(title='US Population in 1975',geo=map_options)
+
+```
+
+## Thank You !!!

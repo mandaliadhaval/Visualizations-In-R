@@ -1,0 +1,95 @@
+---
+title: "Leaflet_Visualization"
+author: "Dhaval Mandalia"
+date: "January 11, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,eval=FALSE}
+library(leaflet)
+my_map<-leaflet()%>%
+  addTiles()
+my_map
+```
+## First World Map
+```{r,echo=FALSE}
+library(leaflet)
+my_map<-leaflet()%>%
+  addTiles()
+my_map
+```
+## Adding Markers
+
+```{r Markers,echo=FALSE}
+#df<-data.frame(lat=c(23.182510,23.192900),
+ #              lng=c(72.641130,72.637474))
+my_map <- my_map %>%
+  addMarkers(lat=23.192900,lng=72.637474,popup = "Dhaval's Office")
+my_map
+```
+
+## Adding Icons
+```{r}
+mapIcons <- makeIcon(
+  iconUrl = "https://pbs.twimg.com/profile_images/942603406081892352/3s4zB2Rq_400x400.jpg",
+  iconWidth = 31*215/230,iconHeight = 31,
+  iconAnchorX = 31*215/230/2,iconAnchorY = 16
+  )
+OfficeSites <- c(
+  "<a href = 'http://www.cybage.com/'>Infocity Office</a>",
+  "<a href = 'http://www.cybage.com/'>GIFT city Office</a>"
+)
+
+OfficeLatLong <- data.frame(
+  lat=c(23.192900,23.162290),
+  lng=c(72.637474,72.680225)
+)
+
+OfficeLatLong %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(icon=mapIcons,popup = OfficeSites)
+```
+## Adding Icons
+```{r}
+mapIcons <- makeIcon(
+  iconUrl = "https://seeklogo.com/images/G/gujarat-tourism-logo-FAAFFB32AE-seeklogo.com.png",
+  iconWidth = 31*215/230,iconHeight = 31,
+  iconAnchorX = 31*215/230/2,iconAnchorY = 16
+  )
+mapCities<-data.frame(name=c("Baroda","Surat","Rajkot","Bhavnagar","Mehsana"),
+                      pop = c(2270000,4460000,3800000,1500000,884000),
+                      lat=c(22.3072, 21.1702, 22.3039,21.7645,23.5880),
+                      lng = c(73.1812, 72.8311, 70.8022,72.1519,72.3693),
+                      col = c("blue","red","orange","brown","yellow")
+                      )
+
+
+
+
+mapSites <- c(
+  "<a href = 'https://gandhiashramsabarmati.org/'>Gandhi Ashram</a>",
+  "<a href = 'http://www.asmwc.org/'>Jama Masjid</a>",
+  "<a href = 'https://www.gujarattourism.com/destination/details/6/32'>Adalaj Stepwell</a>"
+)
+
+mapLatLong <- data.frame(
+  lat=c(23.060635,23.023775,23.166648),
+  lng=c(72.580797,72.587065,72.580046)
+)
+
+mapLatLong %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(icon=mapIcons,popup = mapSites,clusterOptions = markerClusterOptions()) %>%
+  addCircleMarkers(mapCities,color=mapCities$col,lat = mapCities$lat,lng = mapCities$lng,weight = 10,radius = sqrt(mapCities$pop/10000)*3) %>%
+  addLegend(labels = mapCities$name,colors = c("blue","red","orange","brown","yellow"))
+
+```
+
+
+
